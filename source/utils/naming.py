@@ -20,6 +20,9 @@ def __robust_respath_search():
 # ######### RESOURCES DIRECTORIES DEFINITION ###########
 
 RESPATH = __robust_respath_search()
+TBFOLDER = "tbdata"
+MODELSFOLDER = "models"
+DATASETFOLDER = "dataset"
 
 
 def resources_path(*paths):
@@ -37,3 +40,36 @@ def resources_path(*paths):
         basep = p
     os.makedirs(basep, exist_ok=True)
     return p
+
+# ############################## BASE DIRECTORY-RELATIVE PATHS ###############
+
+
+def tensorboard_path(*paths):
+    """
+    Builds the path starting where all tensorboard data should be.
+    :param paths: sequence of directories to be joined after the standard base.
+    :return: The path relative to this standard folder
+    """
+    return resources_path(TBFOLDER, *paths)
+
+
+def models_path(*paths):
+    """
+    Builds the path starting where all model data should be.
+    :param paths: sequence of directories to be joined after the standard base.
+    :return: The path relative to this standard folder
+    """
+    return resources_path(MODELSFOLDER, *paths)
+
+
+def dataset_path(*paths):
+    """
+    Builds the path starting where all datasets should be.
+    :param paths: sequence of directories to be joined after the standard base.
+    :return: The path relative to this standard folder
+    """
+    return resources_path(DATASETFOLDER, *paths)
+
+
+
+

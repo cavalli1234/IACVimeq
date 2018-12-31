@@ -55,7 +55,7 @@ def load_from_png(path):
 def load(path, field_name=None, force_format=None, affine_transform=None, alpha=False):
     """
     Load images of all supported formats (currently .mat, .jpg, .png) from all paths
-    specified, and return them as a unique batch of normalized images.
+    specified and their subdirectories, and return them as a unique batch of normalized images.
     :param path: a list of paths with arbitrary nesting
     :param field_name: in case .mat files are found, this field name regex is used to access all of them
     :param force_format: forces all images to have a defined shape and size, regardless of their original shape.
@@ -88,6 +88,12 @@ def load(path, field_name=None, force_format=None, affine_transform=None, alpha=
             data = matrix_loader(path, field_name=field_name)
         else:
             data = matrix_loader(path)
+    elif os.path.isdir(path):
+        return load([os.path.join(path, s) for s in os.listdir(path)],
+                    field_name=field_name,
+                    force_format=force_format,
+                    affine_transform=affine_transform,
+                    alpha=alpha)
     else:
         return None
 
