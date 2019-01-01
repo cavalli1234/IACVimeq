@@ -17,6 +17,8 @@ def train_model(model_generator, train, valid, loss,
     Clears completely the session at each call to have separated training sessions of different models
 
     :param model_generator: a function returning an instance of the model to be trained
+    :param train: the data used for training the model
+    :param valid: the data used for validating the model during the train
     :param loss: the loss function to be used. Must conform to the keras convention for losses:
                     - must accept two arguments:
                         1) y_true: the ground truth
