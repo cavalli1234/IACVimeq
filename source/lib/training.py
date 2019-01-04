@@ -4,6 +4,9 @@ import keras.optimizers as ko
 
 from utils.naming import *
 from utils.logging import *
+from lib.keras.callbacks.image_writer import ImageWriter
+from lib.keras.callbacks.scalar_writer import ScalarWriter
+from lib.keras.tensorflow_utils.tensorboard_manager import TensorBoardManager as TBManager
 
 
 def train_model(model_generator, train, valid, loss,
@@ -61,23 +64,19 @@ def train_model(model_generator, train, valid, loss,
                                           mode='min',
                                           min_delta=2e-4))
 
-    # if tb_path is not None:
-        # TBManager.set_path(tensorboard_path(model_name))
-        # log("Setting up tensorboard...", level=COMMENTARY)
-        # log("Clearing tensorboard files...", level=COMMENTARY)
-        # TBManager.clear_data()
+    TBManager.set_path(tensorboard_path(model_name))
+    log("Setting up tensorboard...", level=COMMENTARY)
+    log("Clearing tensorboard files...", level=COMMENTARY)
+    TBManager.clear_data()
 
-        # log("Adding tensorboard callbacks...", level=COMMENTARY)
-        # callbacks.append(ScalarWriter())
-        # if tb_plots is not None:
-        #     callbacks.append(ImageWriter(data_sequence=train_data,
-        #                                  image_generators=tb_plots,
-        #                                  name='train',
-        #                                  max_items=10))
-        #     callbacks.append(ImageWriter(data_sequence=valid_data,
-        #                                  image_generators=tb_plots,
-        #                                  name='validation',
-        #                                  max_items=10))
+    log("Adding tensorboard callbacks...", level=COMMENTARY)
+    callbacks.append(ScalarWriter())
+    callbacks.append(ImageWriter(data=train,
+                                 name='train',
+                                 max_imgs=10))
+    callbacks.append(ImageWriter(data=valid,
+                                 name='validation',
+                                 max_imgs=10))
     if additional_callbacks is not None:
         callbacks += additional_callbacks
 
@@ -88,7 +87,8 @@ def train_model(model_generator, train, valid, loss,
 
     model.compile(optimizer=optimizer,
                   loss=loss,
-                  metrics=['accuracy'])
+                  # metrics=['accuracy']
+                  )
 
     history = model.fit(train[0], train[1],
                         validation_data=valid,
