@@ -44,8 +44,8 @@ if __name__ == '__main__':
     set_verbosity(DEBUG)
     (train, _), (valid, _) = cifar10.load_data()
 
-    train = train[:1000] / 255.0
-    valid = valid[:200] / 255.0
+    train = train[:40000] / 255.0
+    valid = valid[:1000] / 255.0
     image_shape = np.shape(train[0])
 
     train = (train, make_ground_truth(train))

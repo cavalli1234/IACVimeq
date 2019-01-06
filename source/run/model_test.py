@@ -5,6 +5,7 @@ sys.path.append(op.realpath(op.join(op.split(__file__)[0], "..")))
 
 import keras.models as km
 from keras.datasets import cifar10
+from lib.models import *
 from utils.naming import *
 import numpy as np
 from matplotlib.pyplot import imshow, show
@@ -29,7 +30,9 @@ def make_ground_truth(imgs: np.ndarray):
 
 
 if __name__ == '__main__':
-    model = km.load_model(models_path("plain_cnn_L5.h5"))
+    # model = km.load_model(models_path("plain_cnn_L5.h5"))
+    model = plain_cnn(layers=5)
+    model.load_weights(models_path("plain_cnn_L5.h5"))
 
     # (_, _), (test, _) = cifar10.load_data()
     # np.random.shuffle(test)
