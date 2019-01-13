@@ -7,12 +7,13 @@ from data.img_io import load
 from keras.datasets import cifar10
 from matplotlib.pyplot import imshow, show
 from utils.naming import *
-from skimage import exposure
+from skimage import exposure, color
 from lib.models import *
 from lib.training import train_model
 import numpy as np
 from keras.losses import mean_squared_error as mse
 from utils.logging import *
+from utils.utility import *
 
 
 def showimgs(imgs):
@@ -32,6 +33,11 @@ def make_ground_truth(imgs: np.ndarray):
     return out
 
 
+def make_ground_truth_ffnn(rgb_imgs: np.ndarray):
+    gt = make_ground_truth(np.array(rgb_imgs))
+    return gt.flatten()
+
+
 def cut_left(data, split):
     return np.array(data[:int(len(data)*split)])
 
@@ -44,14 +50,24 @@ if __name__ == '__main__':
     set_verbosity(DEBUG)
     (train, _), (valid, _) = cifar10.load_data()
 
-    train = train[:40000] / 255.0
-    valid = valid[:1000] / 255.0
+    train = train[:40] / 255.0
+    valid = valid[:10] / 255.0
+
     image_shape = np.shape(train[0])
 
-    train = (train, make_ground_truth(train))
-    valid = (valid, make_ground_truth(valid))
+    train = np.array([color.rgb2gray(x) for x in train])
+    valid = np.array([color.rgb2gray(x) for x in valid])
 
-    model = train_model(model_generator=lambda: plain_cnn(layers=5),
+    print(np.shape(train))
+
+    train_ = attach_histogram_to_batch(train, nbins=128)
+    valid_ = attach_histogram_to_batch(valid, nbins=128)
+
+    train = (train_, make_ground_truth_ffnn(train))
+    valid = (valid_, make_ground_truth_ffnn(valid))
+    print(np.shape(train[0]), np.shape(train[1]))
+
+    model = train_model(model_generator=lambda: ff_hist(n_inputs=129),
                         train=train,
                         valid=valid,
                         loss=mse,

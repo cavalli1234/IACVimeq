@@ -13,6 +13,13 @@ def dummy_cnn(channels=3, name='dummy_cnn', activation='relu'):
     return model
 
 
+def ff_hist(n_inputs: int, name: str = 'ff_hist'):
+    model = km.Sequential(name=name)
+    model.add(kl.Dense(input_shape=(n_inputs,), units=n_inputs, activation='relu'))
+    model.add(kl.Dense(units=1, activation='sigmoid'))
+    return model
+
+
 def dummy_ff(input_shape: tuple, name='dummy_ff'):
     in_size = np.prod(input_shape)
     model = km.Sequential(name=name)
@@ -25,7 +32,7 @@ def dummy_ff(input_shape: tuple, name='dummy_ff'):
 def plain_cnn(channels=3, layers=1, name='plain_cnn', activation='relu'):
     model = km.Sequential(name='%s_L%d' % (name, layers))
     model.add(kl.InputLayer(input_shape=(None, None, channels)))
-    for _ in range(layers-1):
+    for _ in range(layers - 1):
         model.add(kl.Conv2D(filters=64,
                             kernel_size=[3, 3],
                             padding='same',
@@ -38,6 +45,7 @@ def plain_cnn(channels=3, layers=1, name='plain_cnn', activation='relu'):
                         kernel_initializer='glorot_normal'))
     return model
 
+
 if __name__ == '__main__':
-    model = dummy_cnn()
+    model = ff_hist(129)
     model.summary()

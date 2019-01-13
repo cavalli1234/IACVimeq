@@ -9,8 +9,9 @@ from lib.models import *
 from utils.naming import *
 import numpy as np
 from matplotlib.pyplot import imshow, show
-from skimage import exposure
+from skimage import exposure, color
 from data.img_io import load
+from utils.utility import img_diff
 
 def showimgs(imgs):
     for img in imgs:
