@@ -25,16 +25,8 @@ class PixwiseModelWrapper(ModelWrapper):
 
 
 if __name__ == '__main__':
-    from lib.models import *
-    from data.img_io import load
-    from utils.naming import *
-    from keras.datasets import cifar10
-    from skimage import color
+    from data.loading import *
 
     mw = PixwiseModelWrapper(h5_name='ff_hist.h5')
-    # test = load(dataset_path(), force_format=[240, 220, 1])
-    (_, _), (test, _) = cifar10.load_data()
-    np.random.shuffle(test)
-    test = test[:100] / 255.0
-    test = [color.rgb2gray(t) for t in test]
+    test = load_valid(100)
     print(mw.evaluate(test, plots=4))

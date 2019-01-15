@@ -72,12 +72,9 @@ class ModelWrapper:
 
 if __name__ == '__main__':
     from lib.models import *
-    from data.img_io import load
-    from keras.datasets import cifar10
+    from data.loading import *
+
     mw = ModelWrapper(h5_name='plain_cnn_L5.h5',
                       model_generator=lambda: plain_cnn(layers=5))
-    # test = load(dataset_path(), force_format=[240, 220, 3])
-    (_, _), (test, _) = cifar10.load_data()
-    np.random.shuffle(test)
-    test = test[:1000] / 255.0
+    test = load_valid(1000, gray=False)
     print(mw.evaluate(test, plots=3))
