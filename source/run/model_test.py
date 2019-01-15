@@ -13,9 +13,10 @@ from skimage import exposure, color
 from data.img_io import load
 from utils.utility import img_diff
 
+
 def showimgs(imgs):
     for img in imgs:
-        imshow(img)
+        imshow(img, cmap='gray', vmin=0, vmax=1)
         show()
 
 
@@ -43,6 +44,7 @@ if __name__ == '__main__':
 
     testgt = make_ground_truth(test)
     testpred = model.predict(test)
-
-    mixed = np.concatenate((test, testpred, testgt), axis=2)
+    g = lambda x: color.rgb2gray(x)
+    gd = lambda x, y: np.abs(g(x)-g(y))
+    mixed = np.concatenate((gd(testpred, testgt),), axis=2)
     showimgs(mixed)

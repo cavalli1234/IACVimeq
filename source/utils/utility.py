@@ -14,7 +14,8 @@ from data.img_io import load
 def attach_histogram(grayscale_image, nbins: int = 256, normalize: bool = True):
     hist, _ = histogram(grayscale_image, nbins)
     hist = np.array(hist)
-    image = np.array(grayscale_image)
+    image = grayscale_image
+    # image = np.array(grayscale_image)
     image = image.flatten()
     image = np.reshape(image, newshape=(len(image), 1))
     hist = hist / len(image) if normalize else hist
@@ -24,23 +25,25 @@ def attach_histogram(grayscale_image, nbins: int = 256, normalize: bool = True):
 
 def attach_histogram_to_batch(batch_rgb, nbins: int = 256, normalize: bool = True):
     data = [attach_histogram(color.rgb2gray(x), nbins, normalize) for x in batch_rgb]
-    result = data[0]
-    for i in range(len(data) - 1):
-        result = np.concatenate((result, data[i + 1]))
+    # result = data[0]
+    # for i in range(len(data) - 1):
+    #     result = np.concatenate((result, data[i + 1]))
+    result = np.reshape(np.array(data), (np.size(data)//(nbins+1), nbins+1))
     return result
 
 
-def img_diff(img1, img2, function=np.abs):
-    im1 = np.array(img1)
-    im2 = np.array(img2)
-    result = function(im1 - im2)
+def img_diff(img1: np.ndarray, img2: np.ndarray, function=np.abs):
+    # im1 = np.array(img1)
+    # im2 = np.array(img2)
+    result = function(img1 - img2)
     return result
 
 
 if __name__ == '__main__':
     test = load(dataset_path(), force_format=[240, 220, 3])
-    data = attach_histogram_to_batch(test, 128)
+    data = attach_histogram_to_batch(test, 2)
     print(np.shape(data))
+    print(data)
 
 
 
