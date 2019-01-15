@@ -43,10 +43,14 @@ class ModelWrapper:
             plots = min(plots, len(in_batch))
             vert_concat = lambda x: np.concatenate(tuple(x[:plots]), axis=0)
 
+            norm_diff_batch = [d/np.max(d) for d in diff_batch[:plots]]
+
             in_plots = vert_concat(in_batch)
             gt_plots = vert_concat(gt_batch)
             pr_plots = vert_concat(pred_batch)
-            df_plots = vert_concat(diff_batch)
+            df_plots = vert_concat(norm_diff_batch)
+
+
 
             total = np.concatenate((in_plots, gt_plots, pr_plots, df_plots), axis=1)
 
