@@ -3,48 +3,25 @@ import sys
 
 sys.path.append(op.realpath(op.join(op.split(__file__)[0], "..")))
 
-import keras.models as km
-from keras.datasets import cifar10
+from lib.model_wrap.model_wrapper import ModelWrapper
+from lib.model_wrap.pixwise_model_wrapper import PixwiseModelWrapper
 from lib.models import *
-from utils.naming import *
-import numpy as np
-from matplotlib.pyplot import imshow, show
-from skimage import exposure, color
-from data.img_io import load
-from utils.utility import img_diff
-
-
-def showimgs(imgs):
-    for img in imgs:
-        imshow(img, cmap='gray', vmin=0, vmax=1)
-        show()
-
-
-def make_ground_truth(imgs: np.ndarray):
-    out = np.zeros_like(imgs)
-    for idx in range(len(imgs)):
-        tmp = exposure.equalize_hist(imgs[idx])
-        # returned equalized image is in 0-1 floating points!
-        if out.dtype == np.uint8:
-            tmp *= 255
-        out[idx] = tmp
-    return out
-
+from data.loading import *
 
 if __name__ == '__main__':
-    # model = km.load_model(models_path("plain_cnn_L5.h5"))
-    model = plain_cnn(layers=5)
-    model.load_weights(models_path("plain_cnn_L5.h5"))
+    cnn = ModelWrapper(h5_name='plain_cnn_L5.h5',
+                       model_generator=lambda: plain_cnn(layers=5))
 
-    # (_, _), (test, _) = cifar10.load_data()
-    # np.random.shuffle(test)
-    # test = test[:3] / 255.0
+    test_rgb = load_valid(500, shuffle=False, gray=False)
+    cnn_loss = cnn.evaluate(test_rgb, plots=4)
 
-    test = load(dataset_path(), force_format=[240, 220, 3])
+    cnn_luca = ModelWrapper(h5_name='plain_cnn_L5_Luca.h5')
+    cnn_luca_loss = cnn_luca.evaluate(test_rgb, plots=4)
 
-    testgt = make_ground_truth(test)
-    testpred = model.predict(test)
-    g = lambda x: color.rgb2gray(x)
-    gd = lambda x, y: np.abs(g(x)-g(y))
-    mixed = np.concatenate((g(test), g(testpred), g(testgt), gd(testpred, testgt)), axis=2)
-    showimgs(mixed)
+    ff = PixwiseModelWrapper(h5_name='ff_hist.h5')
+    test_gray = load_valid(500, shuffle=False, gray=True)
+    ff_loss = ff.evaluate(test_gray, plots=4)
+
+    print("Pixwise FF loss: %f" % ff_loss)
+    print("CNN loss: %f" % cnn_loss)
+    print("CNN_L loss: %f" % cnn_luca_loss)

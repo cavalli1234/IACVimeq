@@ -59,7 +59,7 @@ class ModelWrapper:
                 cmap = 'gray'
 
             plt.title("Image samples")
-            plt.imshow(total, cmap=cmap)
+            plt.imshow(total, cmap=cmap, vmin=0, vmax=1)
             plt.show()
             plt.title("Imagewise loss distribution")
             plt.hist(losses_array)
