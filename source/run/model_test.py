@@ -46,5 +46,5 @@ if __name__ == '__main__':
     testpred = model.predict(test)
     g = lambda x: color.rgb2gray(x)
     gd = lambda x, y: np.abs(g(x)-g(y))
-    mixed = np.concatenate((gd(testpred, testgt),), axis=2)
+    mixed = np.concatenate((g(test), g(testpred), g(testgt), gd(testpred, testgt)), axis=2)
     showimgs(mixed)

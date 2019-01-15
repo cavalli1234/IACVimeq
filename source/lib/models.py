@@ -46,6 +46,42 @@ def plain_cnn(channels=3, layers=1, name='plain_cnn', activation='relu'):
     return model
 
 
+def hist_building_cnn(channels=1, layers=1, bins=128, name='hist_building_cnn', activation='relu'):
+    model = km.Sequential(name='%s_L%d_B%d' % (name, layers, bins))
+    in_layer = kl.InputLayer(input_shape=(None, None, channels))
+    model.add(in_layer)
+    # add pixel-wise convolution that should select bins
+    last_conv = kl.Conv2D(filters=bins,
+                          kernel_size=[1, 1],
+                          padding='same',
+                          activation='tanh',
+                          kernel_initializer='glorot_normal')
+    model.add(last_conv)
+    # adjust and sum up local bins
+    for _ in range(layers - 1):
+        last_conv = kl.Conv2D(filters=bins,
+                              kernel_size=[3, 3],
+                              padding='same',
+                              activation=activation,
+                              kernel_initializer='glorot_normal')
+        model.add(last_conv)
+    # attach input image
+    model.add(kl.Concatenate((last_conv, in_layer), axis=-1))
+
+    # infer pixel values pixel-wise
+    model.add(kl.Conv2D(filters=64,
+                        kernel_size=[1, 1],
+                        padding='same',
+                        activation=activation,
+                        kernel_initializer='glorot_normal'))
+    model.add(kl.Conv2D(filters=channels,
+                        kernel_size=[1, 1],
+                        padding='same',
+                        activation='sigmoid',
+                        kernel_initializer='glorot_normal'))
+    return model
+
+
 if __name__ == '__main__':
-    model = ff_hist(129)
+    model = hist_building_cnn(layers=3, bins=128)
     model.summary()
