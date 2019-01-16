@@ -14,7 +14,8 @@ def train_model(model_generator, train, valid, loss,
                 patience=0,
                 model_name=None,
                 additional_callbacks=None,
-                learning_rate=1e-3) -> K.models.Model:
+                learning_rate=1e-3,
+                log_images=True) -> K.models.Model:
     """
     Train a model with all kinds of log services and optimizations we could come up with.
     Clears completely the session at each call to have separated training sessions of different models
@@ -71,12 +72,13 @@ def train_model(model_generator, train, valid, loss,
 
     log("Adding tensorboard callbacks...", level=COMMENTARY)
     callbacks.append(ScalarWriter())
-    callbacks.append(ImageWriter(data=train,
-                                 name='train',
-                                 max_imgs=10))
-    callbacks.append(ImageWriter(data=valid,
-                                 name='validation',
-                                 max_imgs=10))
+    if log_images:
+        callbacks.append(ImageWriter(data=train,
+                                     name='train',
+                                     max_imgs=10))
+        callbacks.append(ImageWriter(data=valid,
+                                     name='validation',
+                                     max_imgs=10))
     if additional_callbacks is not None:
         callbacks += additional_callbacks
 

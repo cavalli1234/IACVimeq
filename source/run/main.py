@@ -67,11 +67,12 @@ if __name__ == '__main__':
     valid = (valid_, make_ground_truth_ffnn(valid))
     print(np.shape(train[0]), np.shape(train[1]))
 
-    model = train_model(model_generator=lambda: ff_hist(n_inputs=129),
+    model = train_model(model_generator=lambda: ff_hist(n_inputs=129, name='ddddummy'),
                         train=train,
                         valid=valid,
                         loss=mse,
                         patience=5,
                         learning_rate=3e-4,
-                        max_epochs=200)
+                        max_epochs=200,
+                        log_images=False)
 
