@@ -24,10 +24,19 @@ class ModelWrapper:
             self.model: km.Model = model_generator()
             self.model.load_weights(models_path(h5_name))
 
+        self.need_reshape_out = False
+
     def preprocess_input(self, inp):
+        if len(self.model.input_shape) > np.ndim(inp):
+            inp = np.reshape(inp, newshape=np.shape(inp)+(1,))
+            self.need_reshape_out = True
+        else:
+            self.need_reshape_out = False
         return inp
 
     def postprocess_output(self, out):
+        if self.need_reshape_out:
+            out = np.reshape(out, newshape=np.shape(out)[:-1])
         return out
 
     def predict(self, in_imgs):
@@ -49,8 +58,6 @@ class ModelWrapper:
             gt_plots = vert_concat(gt_batch)
             pr_plots = vert_concat(pred_batch)
             df_plots = vert_concat(norm_diff_batch)
-
-
 
             total = np.concatenate((in_plots, gt_plots, pr_plots, df_plots), axis=1)
 
