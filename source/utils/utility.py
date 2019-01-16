@@ -5,7 +5,7 @@ import sys
 
 sys.path.append(op.realpath(op.join(op.split(__file__)[0], "..")))
 
-from source.utils.naming import *
+from utils.naming import *
 import numpy as np
 from skimage import color
 from data.img_io import load
