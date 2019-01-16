@@ -73,7 +73,7 @@ class ModelWrapper:
             plt.imshow(total, cmap=cmap, vmin=0, vmax=1)
             plt.show()
             plt.title("Imagewise loss distribution")
-            plt.hist(losses_array)
+            plt.hist(losses_array, bins=100)
             plt.show()
             # plt.title("Pixelwise loss distribution")
             # plt.hist(np.reshape(diff_batch, newshape=(np.size(diff_batch),)), bins=2048)
