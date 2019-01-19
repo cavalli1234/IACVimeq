@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     test_gray = load_valid(500, shuffle=False, gray=True)
 
-    ff = PixwiseModelWrapper(h5_name='ddddummy.h5',
+    ff = PixwiseModelWrapper(h5_name='ddddummy_dropout.h5',
                              model_generator=lambda: ff_hist(129))
     ff_loss = ff.evaluate(test_gray, plots=4)
 

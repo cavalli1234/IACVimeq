@@ -50,8 +50,8 @@ if __name__ == '__main__':
     set_verbosity(DEBUG)
     (train, _), (valid, _) = cifar10.load_data()
 
-    train = train[:40000] / 255.0
-    valid = valid[:10000] / 255.0
+    train = train[:7000] / 255.0
+    valid = valid[:2000] / 255.0
 
     image_shape = np.shape(train[0])
 
@@ -60,24 +60,24 @@ if __name__ == '__main__':
 
     print(np.shape(train))
 
-    # train_ = attach_histogram_to_batch(train, nbins=128)
-    # valid_ = attach_histogram_to_batch(valid, nbins=128)
+    train_ = attach_histogram_to_batch(train, nbins=128)
+    valid_ = attach_histogram_to_batch(valid, nbins=128)
 
-    train_ = np.expand_dims(train, axis=-1)
-    valid_ = np.expand_dims(valid, axis=-1)
+    # train_ = np.expand_dims(train, axis=-1)
+    # valid_ = np.expand_dims(valid, axis=-1)
 
-    # train = (train_, make_ground_truth_ffnn(train))
-    # valid = (valid_, make_ground_truth_ffnn(valid))
-    train = (train_, np.expand_dims(make_ground_truth(train), axis=-1))
-    valid = (valid_, np.expand_dims(make_ground_truth(valid), axis=-1))
+    train = (train_, make_ground_truth_ffnn(train))
+    valid = (valid_, make_ground_truth_ffnn(valid))
+    # train = (train_, np.expand_dims(make_ground_truth(train), axis=-1))
+    # valid = (valid_, np.expand_dims(make_ground_truth(valid), axis=-1))
     print(np.shape(train[0]), np.shape(train[1]))
 
-    model = train_model(model_generator=lambda: hist_building_cnn(channels=1, layers=5),
+    model = train_model(model_generator=lambda: ff_hist(n_inputs=129, name='ddddummy2'),
                         train=train,
                         valid=valid,
                         loss=mse,
                         patience=5,
-                        learning_rate=3e-4,
+                        learning_rate=1e-4,
                         max_epochs=200,
                         log_images=False)
 
