@@ -50,14 +50,19 @@ def plain_cnn(channels=3, layers=1, name='plain_cnn', activation='relu'):
 
 def hist_building_cnn(channels=1, layers=1, bins=128, name='hist_building_cnn', activation='relu'):
     inp = kl.Input(shape=(None, None, channels))
-    # add pixel-wise convolution that should select bins
+    # add pixel-wise convolutions that should select bins
     last_conv = kl.Conv2D(filters=bins,
                           kernel_size=[1, 1],
                           padding='same',
                           activation='tanh',
                           kernel_initializer='glorot_normal')(inp)
+    last_conv = kl.Conv2D(filters=bins,
+                          kernel_size=[1, 1],
+                          padding='same',
+                          activation='relu',
+                          kernel_initializer='glorot_normal')(last_conv)
     # adjust and sum up local bins
-    for _ in range(layers - 1):
+    for _ in range(layers - 2):
         last_conv = kl.Conv2D(filters=bins,
                               kernel_size=[3, 3],
                               padding='same',
