@@ -15,7 +15,6 @@ def attach_histogram(grayscale_image, nbins: int = 256, normalize: bool = True):
     hist, _ = histogram(grayscale_image, nbins)
     hist = np.array(hist)
     image = grayscale_image
-    # image = np.array(grayscale_image)
     image = image.flatten()
     image = np.reshape(image, newshape=(len(image), 1))
     hist = hist / len(image) if normalize else hist
@@ -32,9 +31,20 @@ def attach_histogram_to_batch(batch_rgb, nbins: int = 256, normalize: bool = Tru
     return result
 
 
+def shuffle_data(input_data_with_target: tuple, keep_probability: float = 1.0):
+    x = input_data_with_target[0]
+    t = input_data_with_target[1]
+    filtered_x = []
+    filtered_t = []
+    for i in range(len(x)):
+        if np.random.uniform() <= keep_probability:
+            filtered_x.append(x[i])
+            filtered_t.append(t[i])
+    result = (filtered_x, filtered_t)
+    return result
+
+
 def img_diff(img1: np.ndarray, img2: np.ndarray, function=np.abs):
-    # im1 = np.array(img1)
-    # im2 = np.array(img2)
     result = function(img1 - img2)
     return result
 

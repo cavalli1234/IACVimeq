@@ -50,15 +50,13 @@ if __name__ == '__main__':
     set_verbosity(DEBUG)
     (train, _), (valid, _) = cifar10.load_data()
 
-    train = train[:7000] / 255.0
-    valid = valid[:2000] / 255.0
+    train = train[:100] / 255.0
+    valid = valid[:10] / 255.0
 
     image_shape = np.shape(train[0])
 
     train = np.array([color.rgb2gray(x) for x in train])
     valid = np.array([color.rgb2gray(x) for x in valid])
-
-    print(np.shape(train))
 
     train_ = attach_histogram_to_batch(train, nbins=128)
     valid_ = attach_histogram_to_batch(valid, nbins=128)
@@ -66,8 +64,9 @@ if __name__ == '__main__':
     # train_ = np.expand_dims(train, axis=-1)
     # valid_ = np.expand_dims(valid, axis=-1)
 
-    train = (train_, make_ground_truth_ffnn(train))
-    valid = (valid_, make_ground_truth_ffnn(valid))
+    train = shuffle_data((train_, make_ground_truth_ffnn(train)), keep_probability=1)
+    valid = shuffle_data((valid_, make_ground_truth_ffnn(valid)), keep_probability=1)
+
     # train = (train_, np.expand_dims(make_ground_truth(train), axis=-1))
     # valid = (valid_, np.expand_dims(make_ground_truth(valid), axis=-1))
     print(np.shape(train[0]), np.shape(train[1]))
