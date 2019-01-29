@@ -40,7 +40,7 @@ def shuffle_data(input_data_with_target: tuple, keep_probability: float = 1.0):
         if np.random.uniform() <= keep_probability:
             filtered_x.append(x[i])
             filtered_t.append(t[i])
-    result = (filtered_x, filtered_t)
+    result = (np.array(filtered_x), np.array(filtered_t))
     return result
 
 
