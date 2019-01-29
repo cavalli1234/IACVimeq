@@ -50,8 +50,8 @@ if __name__ == '__main__':
     set_verbosity(DEBUG)
     (train, _), (valid, _) = cifar10.load_data()
 
-    train = train[:100] / 255.0
-    valid = valid[:10] / 255.0
+    train = train[:] / 255.0
+    valid = valid[:] / 255.0
 
     image_shape = np.shape(train[0])
 
@@ -64,8 +64,8 @@ if __name__ == '__main__':
     # train_ = np.expand_dims(train, axis=-1)
     # valid_ = np.expand_dims(valid, axis=-1)
 
-    train = shuffle_data((train_, make_ground_truth_ffnn(train)), keep_probability=1)
-    valid = shuffle_data((valid_, make_ground_truth_ffnn(valid)), keep_probability=1)
+    train = shuffle_data((train_, make_ground_truth_ffnn(train)), keep_probability=0.5)
+    valid = shuffle_data((valid_, make_ground_truth_ffnn(valid)), keep_probability=0.5)
 
     # train = (train_, np.expand_dims(make_ground_truth(train), axis=-1))
     # valid = (valid_, np.expand_dims(make_ground_truth(valid), axis=-1))
