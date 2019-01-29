@@ -1,4 +1,5 @@
 import os
+import re
 
 
 def __robust_respath_search():
@@ -92,7 +93,20 @@ def fivek_element(idx, expert=None):
         exp = "original"
     else:
         exp = "expert%d" % expert
-    return fivek_path(exp, "%d.png" % idx)
+
+    if isinstance(idx, int):
+        idxes = [idx]
+    elif isinstance(idx, str):
+        if re.fullmatch("\d+", idx):
+            idxes = [int(idx)]
+        else:
+            match = re.fullmatch("(\d+)-(\d+)", idx)
+            m, M = int(match.group(1)), int(match.group(2))
+            idxes = list(range(m, M))
+    else:
+        idxes = idx
+
+    return [fivek_path(exp, "%d.png" % idex) for idex in idxes]
 
 
 def fivek_dimension():
@@ -104,13 +118,15 @@ def fivek_dimension():
 
 
 if __name__ == '__main__':
-    t1 = fivek_element(5, 8)
+    t1 = fivek_element("0-5", 8)
     t2 = fivek_element(890)
     t3 = fivek_element(31510, 0)
-    show = lambda t: print((t, os.path.exists(t)))
+    t4 = fivek_element([-2, 4, 7, 210, 6700], 1)
+    show = lambda t: print((t, [os.path.exists(p) for p in t]))
     show(t1)
     show(t2)
     show(t3)
+    show(t4)
     print("Dataset dimension: %d" % fivek_dimension())
 
 
