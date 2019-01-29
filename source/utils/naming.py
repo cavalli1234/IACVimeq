@@ -95,6 +95,14 @@ def fivek_element(idx, expert=None):
     return fivek_path(exp, "%d.png" % idx)
 
 
+def fivek_dimension():
+    """
+    Checks the total number of available images of fivek data
+    :return: the number of available images in the original folder of fivek. Int.
+    """
+    return len(os.listdir(fivek_path("original")))
+
+
 if __name__ == '__main__':
     t1 = fivek_element(5, 8)
     t2 = fivek_element(890)
@@ -103,6 +111,7 @@ if __name__ == '__main__':
     show(t1)
     show(t2)
     show(t3)
+    print("Dataset dimension: %d" % fivek_dimension())
 
 
 
