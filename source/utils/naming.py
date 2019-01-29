@@ -23,7 +23,7 @@ RESPATH = __robust_respath_search()
 TBFOLDER = "tbdata"
 MODELSFOLDER = "models"
 DATASETFOLDER = "dataset"
-
+FIVEKFOLDR = "../../../fivek"
 
 def resources_path(*paths):
     """
@@ -69,6 +69,40 @@ def dataset_path(*paths):
     :return: The path relative to this standard folder
     """
     return resources_path(DATASETFOLDER, *paths)
+
+
+def fivek_path(*paths):
+    """
+    Builds the path starting where all fivek data should be.
+    :param paths: sequence of directories to be joined after the standard base.
+    :return: The path relative to this standard folder
+    """
+    return resources_path(FIVEKFOLDR, *paths)
+
+
+def fivek_element(idx, expert=None):
+    """
+    Builds the path starting where all fivek original data should be.
+    :param idx: index of the frame to be returned.
+    :param expert: index of expert to be searched. Original frame if None.
+    :return: The path relative to this standard folder
+    """
+
+    if not isinstance(expert, int) or expert < 0 or expert > 4:
+        exp = "original"
+    else:
+        exp = "expert%d" % expert
+    return fivek_path(exp, "%d.png" % idx)
+
+
+if __name__ == '__main__':
+    t1 = fivek_element(5, 8)
+    t2 = fivek_element(890)
+    t3 = fivek_element(31510, 0)
+    show = lambda t: print((t, os.path.exists(t)))
+    show(t1)
+    show(t2)
+    show(t3)
 
 
 
