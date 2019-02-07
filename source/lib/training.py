@@ -38,6 +38,12 @@ def train_model(model_generator, train, valid, loss,
 
     K.backend.clear_session()
 
+    # trying to fix CUDNN problems
+    cfg = K.backend.tf.ConfigProto(gpu_options=
+                           {'allow_growth': True,
+                            'per_process_gpu_memory_fraction': 0.7})
+    K.backend.set_session(K.backend.tf.Session(config=cfg))
+
     model = model_generator()
 
     if model_name is None:
