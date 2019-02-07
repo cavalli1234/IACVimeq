@@ -17,7 +17,8 @@ def ff_hist(n_inputs: int, name: str = 'ff_hist'):
     model = km.Sequential(name=name)
     model.add(kl.Dense(input_shape=(n_inputs,), units=n_inputs//2, activation='relu'))
     model.add(kl.Dense(units=n_inputs//2, activation='relu'))
-    model.add(kl.Dropout(rate=0.8))
+    model.add(kl.Dense(units=n_inputs//2, activation='relu'))
+    model.add(kl.Dropout(rate=0.6))
     model.add(kl.Dense(units=1, activation='sigmoid'))
     return model
 
