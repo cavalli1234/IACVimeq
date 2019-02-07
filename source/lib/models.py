@@ -56,17 +56,15 @@ def hist_building_cnn(channels=1, layers=1, bins=128, name='hist_building_cnn', 
                           padding='same',
                           activation='tanh',
                           kernel_initializer='glorot_normal')(inp)
-    """
     last_conv = kl.Conv2D(filters=bins,
                           kernel_size=[1, 1],
                           padding='same',
                           activation='relu',
                           kernel_initializer='glorot_normal')(last_conv)
-    """
     # adjust and sum up local bins
-    for _ in range(layers - 1):
+    for _ in range(layers - 2):
         last_conv = kl.Conv2D(filters=bins,
-                              kernel_size=[3, 3],
+                              kernel_size=[7, 7],
                               padding='same',
                               activation=activation,
                               kernel_initializer='glorot_normal')(last_conv)

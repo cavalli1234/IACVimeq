@@ -36,10 +36,17 @@ def shuffle_data(input_data_with_target: tuple, keep_probability: float = 1.0):
     t = input_data_with_target[1]
     filtered_x = []
     filtered_t = []
+    # can optimize filtering with array indexing
     for i in range(len(x)):
         if np.random.uniform() <= keep_probability:
             filtered_x.append(x[i])
             filtered_t.append(t[i])
+
+    # actual shuffling
+    tmp = list(zip(filtered_x, filtered_t))
+    np.random.shuffle(tmp)
+    filtered_x, filtered_t = zip(*tmp)
+
     result = (np.array(filtered_x), np.array(filtered_t))
     return result
 
@@ -54,6 +61,9 @@ if __name__ == '__main__':
     data = attach_histogram_to_batch(test, 2)
     print(np.shape(data))
     print(data)
+    d2 = shuffle_data((data, data), keep_probability=0.1)
+    print(np.shape(d2))
+    print(d2)
 
 
 
