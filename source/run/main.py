@@ -13,6 +13,11 @@ from keras.losses import mean_squared_error as mse
 from utils.logging import *
 from utils.utility import *
 
+# trying to fix CUDNN problems
+import keras.backend as K
+cfg = K.tf.ConfigProto(gpu_options={'allow_growth': True})
+K.set_session(K.tf.Session(config=cfg))
+
 
 def make_ground_truth(imgs: np.ndarray):
     out = np.zeros_like(imgs)
