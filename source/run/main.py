@@ -68,9 +68,10 @@ if __name__ == '__main__':
     # valid = np.array([color.rgb2gray(x) for x in valid])
 
     train, valid = load_data(tn=1000, vn=100)
-    train, valid = preprocess_data_cnn(train, valid)
+    train, valid = preprocess_data_ffnn(train, valid)
 
-    mg = lambda: hist_building_cnn(layers=4, bins=64)
+    # mg = lambda: hist_building_cnn(layers=4, bins=64)
+    mg = lambda: ff_hist(129)
 
     model = train_model(model_generator=mg,
                         train=train,
@@ -79,5 +80,5 @@ if __name__ == '__main__':
                         patience=5,
                         learning_rate=1e-4,
                         max_epochs=200,
-                        log_images=True)
+                        log_images=False)
 
