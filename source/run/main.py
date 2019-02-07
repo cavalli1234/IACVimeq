@@ -78,7 +78,7 @@ if __name__ == '__main__':
                         valid=valid,
                         loss=mse,
                         patience=5,
-                        learning_rate=1e-4,
+                        learning_rate=1e-5,
                         max_epochs=200,
                         log_images=False)
 
