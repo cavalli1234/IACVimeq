@@ -29,7 +29,7 @@ if __name__ == '__main__':
     # conv_hist_loss = conv_hist.evaluate(test_gray, plots=4)
 
     print("Pixwise FF loss: %f" % ff_loss)
-    print("Pixwise FF tloss: %f" % ff_loss)
+    print("Pixwise FF tloss: %f" % ff_tloss)
     # print("CNN loss: %f" % cnn_loss)
     # print("CNN_hist loss: %f" % conv_hist_loss)
 
