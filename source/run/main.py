@@ -68,10 +68,10 @@ if __name__ == '__main__':
     # valid = np.array([color.rgb2gray(x) for x in valid])
 
     train, valid = load_data(tn=30000, vn=5000)
-    train, valid = preprocess_data_ffnn(train, valid, bins=32, kp=0.25)
+    train, valid = preprocess_data_ffnn(train, valid, bins=128, kp=0.25)
 
     # mg = lambda: hist_building_cnn(layers=4, bins=64)
-    mg = lambda: ff_hist(33)
+    mg = lambda: ff_hist(129)
 
     model = train_model(model_generator=mg,
                         train=train,

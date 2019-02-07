@@ -15,8 +15,8 @@ if __name__ == '__main__':
     # test_rgb = load_valid(500, shuffle=False, gray=False)
     # cnn_loss = cnn.evaluate(test_rgb, plots=4)
 
-    test_gray_v = load_valid(1000, shuffle=False, gray=True)
-    test_gray_t = load_train(1000, shuffle=False, gray=True)
+    test_gray_v = load_valid(500, shuffle=False, gray=True)
+    test_gray_t = load_train(500, shuffle=False, gray=True)
 
     ff = PixwiseModelWrapper(h5_name='ff_hist.h5',
                              #model_generator=lambda: ff_hist(129)
