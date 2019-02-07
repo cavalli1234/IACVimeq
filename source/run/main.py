@@ -15,7 +15,9 @@ from utils.utility import *
 
 # trying to fix CUDNN problems
 import keras.backend as K
-cfg = K.tf.ConfigProto(gpu_options={'allow_growth': True})
+cfg = K.tf.ConfigProto(gpu_options=
+                       {'allow_growth': True,
+                        'per_process_gpu_memory_fraction': 0.7})
 K.set_session(K.tf.Session(config=cfg))
 
 
