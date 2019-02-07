@@ -71,7 +71,7 @@ if __name__ == '__main__':
     train, valid = preprocess_data_ffnn(train, valid, bins=64, kp=0.25)
 
     # mg = lambda: hist_building_cnn(layers=4, bins=64)
-    mg = lambda: ff_hist(65)
+    mg = lambda: ff_hist(65, name='ff_hist_tanh')
 
     model = train_model(model_generator=mg,
                         train=train,
