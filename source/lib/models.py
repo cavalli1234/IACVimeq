@@ -13,16 +13,16 @@ def dummy_cnn(channels=3, name='dummy_cnn', activation='relu'):
     return model
 
 
-def ff_hist(n_inputs: int, name: str = None):
+def ff_hist(n_inputs: int, layers: int=5, name: str = None):
     bins = n_inputs-1
     if name is None:
-        name = 'ff_hist_b'+str(bins)
+        name = 'ff_L%d_B%d' % (layers, bins)
     model = km.Sequential(name=name)
     model.add(kl.Dense(input_shape=(n_inputs,), units=n_inputs//2, activation='relu'))
-    model.add(kl.Dense(units=n_inputs//2, activation='relu'))
-    model.add(kl.Dense(units=n_inputs//2, activation='tanh'))
+    for _ in range(layers-3):
+        model.add(kl.Dense(units=n_inputs//2, activation='relu'))
     model.add(kl.Dense(units=n_inputs//4, activation='tanh'))
-    model.add(kl.Dropout(rate=0.75))
+    model.add(kl.Dropout(rate=0.85))
     model.add(kl.Dense(units=1, activation='sigmoid'))
     return model
 

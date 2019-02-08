@@ -22,7 +22,7 @@ DEFAULT_OPTS = {
 
 DEFAULT_MODELS = {
     'conv': lambda b, l: ModelWrapper(model_generator=lambda: hist_building_cnn(layers=l, bins=b)),
-    'ff': lambda b, l: PixwiseModelWrapper(model_generator=lambda: ff_hist(n_inputs=b+1))
+    'ff': lambda b, l: PixwiseModelWrapper(model_generator=lambda: ff_hist(n_inputs=b+1, layers=l))
 }
 
 
