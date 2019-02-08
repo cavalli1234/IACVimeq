@@ -10,7 +10,7 @@ from data.loading import *
 from utils.train_setup import parse_opts, load_model, load_data
 
 def main():
-    optlist = sys.argv[:1]
+    optlist = sys.argv[1:]
     # optlist = '-i ff_hist -m ff'.split()
     opts = parse_opts(optlist)
     model = load_model(opts)
