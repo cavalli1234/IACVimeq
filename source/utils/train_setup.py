@@ -16,7 +16,8 @@ DEFAULT_OPTS = {
     'o': None,  # output model name
     'l': 5,     # number of layers for convnet
     'b': 64,    # number of bins to consider
-    'k': 0.25   # keep probability in ff pixel selection
+    'k': 0.25,  # keep probability in ff pixel selection
+    's': False  # selective train data selection
 }
 
 DEFAULT_MODELS = {
@@ -26,7 +27,7 @@ DEFAULT_MODELS = {
 
 
 def parse_opts(optlist=sys.argv[1:]):
-    in_opts, args = getopt.getopt(optlist, 't:v:m:i:o:l:k:b:')
+    in_opts, args = getopt.getopt(optlist, 't:v:m:i:o:l:k:b:s')
     out_opts = DEFAULT_OPTS
     for (o, v) in in_opts:
         o = re.sub('^-*', '', o)
@@ -36,6 +37,8 @@ def parse_opts(optlist=sys.argv[1:]):
             out_opts[o] = v
         elif o in 'k':
             out_opts[o] = float(v)
+        elif o in 's':
+            out_opts[o] = True
 
     return out_opts
 
@@ -71,7 +74,7 @@ def load_data(opts: dict, mw: ModelWrapper):
     def basic_train_selection():
         return load_train(TRAIN_SAMPLES, gray=True)
 
-    train = pretrained_train_selection() if pretrained_model(opts) else basic_train_selection()
+    train = pretrained_train_selection() if pretrained_model(opts) and opts['s'] else basic_train_selection()
     valid = load_valid(VALID_SAMPLES, gray=True)
 
     def ff_preprocess():
