@@ -11,8 +11,8 @@ from utils.train_setup import parse_opts, \
 
 
 def main():
-    optstring = sys.argv[1:]
-    opts = parse_opts(optstring)
+    optlist = sys.argv[1:]
+    opts = parse_opts(optlist)
     model = load_model(opts)
     train, valid = load_data(opts, model)
     config = setup_train_configuration(opts=opts,

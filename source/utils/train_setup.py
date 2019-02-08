@@ -25,8 +25,8 @@ DEFAULT_MODELS = {
 }
 
 
-def parse_opts(optstring=sys.argv[1:]):
-    in_opts, args = getopt.getopt(optstring.split(), 't:v:m:i:o:l:k:b:')
+def parse_opts(optlist=sys.argv[1:]):
+    in_opts, args = getopt.getopt(optlist, 't:v:m:i:o:l:k:b:')
     out_opts = DEFAULT_OPTS
     for (o, v) in in_opts:
         o = re.sub('^-*', '', o)
