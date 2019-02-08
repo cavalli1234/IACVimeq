@@ -36,7 +36,7 @@ def train_model(model_generator, train, valid, loss,
     :return: The trained model, if early stopping is active this is the best model selected.
     """
 
-    K.backend.clear_session()
+    # K.backend.clear_session()
 
     # trying to fix CUDNN problems
     # cfg = K.backend.tf.ConfigProto(gpu_options=

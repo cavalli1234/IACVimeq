@@ -10,7 +10,7 @@ def _batch_attach_histogram(batch_gray, nbins: int = 256, normalize: bool = True
 
 
 class PixwiseModelWrapper(ModelWrapper):
-    def __init__(self, h5_name: str, model_generator=None):
+    def __init__(self, h5_name: str=None, model_generator=None):
         ModelWrapper.__init__(self, h5_name=h5_name,
                               model_generator=model_generator)
         self.last_input_shape = None

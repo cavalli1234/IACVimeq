@@ -13,7 +13,10 @@ def dummy_cnn(channels=3, name='dummy_cnn', activation='relu'):
     return model
 
 
-def ff_hist(n_inputs: int, name: str = 'ff_hist'):
+def ff_hist(n_inputs: int, name: str = None):
+    bins = n_inputs-1
+    if name is None:
+        name = 'ff_hist_b'+str(bins)
     model = km.Sequential(name=name)
     model.add(kl.Dense(input_shape=(n_inputs,), units=n_inputs//2, activation='relu'))
     model.add(kl.Dense(units=n_inputs//2, activation='relu'))

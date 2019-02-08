@@ -17,13 +17,20 @@ def make_ground_truth(imgs: np.ndarray):
 
 
 class ModelWrapper:
-    def __init__(self, h5_name: str, model_generator=None):
-        if model_generator is None:
+    def __init__(self, h5_name: str=None, model_generator=None):
+        if h5_name is None and model_generator is None:
+            self.model = None # nothing has been passed, nothing to be wrapped
+            return
+        elif h5_name is None:
+            self.model = model_generator()
+        elif model_generator is None:
             self.model: km.Model = km.load_model(models_path(h5_name))
         else:
             self.model: km.Model = model_generator()
             self.model.load_weights(models_path(h5_name))
 
+        if h5_name is not None:
+            self.model.name = h5_name[:-3]
         self.need_reshape_out = False
 
     def preprocess_input(self, inp):
@@ -42,17 +49,18 @@ class ModelWrapper:
     def predict(self, in_imgs):
         return self.postprocess_output(self.model.predict(self.preprocess_input(in_imgs)))
 
-    def evaluate(self, in_batch, gt_batch=None, plots=0):
+    def evaluate(self, in_batch, gt_batch=None, plots=0, summarize_losses=True):
         if gt_batch is None:
             gt_batch = make_ground_truth(in_batch)
         pred_batch = self.predict(in_batch)
         diff_batch = [np.square(gt_batch[idx]-pred_batch[idx]) for idx in range(len(gt_batch))]
         losses_array = np.mean(diff_batch, axis=tuple(range(1, len(np.shape(diff_batch)))))
         if plots > 0:
+            worst_sample_idx = np.argmax(losses_array)
             plots = min(plots, len(in_batch))
-            vert_concat = lambda x: np.concatenate(tuple(x[:plots]), axis=0)
+            vert_concat = lambda x: np.concatenate((x[worst_sample_idx],)+tuple(x[:plots-1]), axis=0)
 
-            norm_diff_batch = [d/np.max(d) for d in diff_batch[:plots]]
+            norm_diff_batch = [d/np.max(d) for d in diff_batch]
 
             in_plots = vert_concat(in_batch)
             gt_plots = vert_concat(gt_batch)
@@ -78,7 +86,9 @@ class ModelWrapper:
             # plt.title("Pixelwise loss distribution")
             # plt.hist(np.reshape(diff_batch, newshape=(np.size(diff_batch),)), bins=2048)
             # plt.show()
-        return np.mean(losses_array)
+        if summarize_losses:
+            return np.mean(losses_array)
+        return losses_array
 
 
 if __name__ == '__main__':
