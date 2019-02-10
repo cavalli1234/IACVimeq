@@ -119,11 +119,8 @@ def load(path, field_name=None, force_format=None, affine_transform=None, alpha=
         if force_major_side_x:
             # rotate images if their major size is not the first one
             imshape = np.shape(img)
-            print("Before swap", imshape)
             if imshape[0] < imshape[1]:
                 img = np.rot90(img, k=1, axes=(0, 1))
-
-        print("After swap", np.shape(img))
 
         if force_format is not None:
             # if grayscale to rgb needs special manipulation:
@@ -140,7 +137,5 @@ def load(path, field_name=None, force_format=None, affine_transform=None, alpha=
             img = img * affine_transform[0] + affine_transform[1]
 
         out.append(img)
-
-    print("Returning...", np.shape(out))
 
     return np.array(out)
