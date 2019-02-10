@@ -55,7 +55,7 @@ def load_model(opts):
 
     if opts['c']:
         ext = '.ckp'
-        model_generator = lambda: DEFAULT_MODELS[opts['m']](opts['b'], opts['l'])
+        model_generator = lambda: DEFAULT_MODELS[opts['m']](opts['b'], opts['l']).model
     else:
         ext = '.h5'
         model_generator = None
