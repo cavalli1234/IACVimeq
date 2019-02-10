@@ -17,7 +17,8 @@ DEFAULT_OPTS = {
     'l': 5,     # number of layers for convnet
     'b': 64,    # number of bins to consider
     'k': 0.25,  # keep probability in ff pixel selection
-    's': False  # selective train data selection
+    's': False,  # selective train data selection
+    'c': False  # the model is to be loaded from a ckp file
 }
 
 DEFAULT_MODELS = {
@@ -27,7 +28,7 @@ DEFAULT_MODELS = {
 
 
 def parse_opts(optlist=sys.argv[1:]):
-    in_opts, args = getopt.getopt(optlist, 't:v:m:i:o:l:k:b:s')
+    in_opts, args = getopt.getopt(optlist, 't:v:m:i:o:l:k:b:sc')
     out_opts = DEFAULT_OPTS
     for (o, v) in in_opts:
         o = re.sub('^-*', '', o)
@@ -37,7 +38,7 @@ def parse_opts(optlist=sys.argv[1:]):
             out_opts[o] = v
         elif o in 'k':
             out_opts[o] = float(v)
-        elif o in 's':
+        elif o in 'sc':
             out_opts[o] = True
 
     return out_opts
@@ -51,10 +52,18 @@ def load_model(opts):
     if not pretrained_model(opts):
         # no old model!
         return DEFAULT_MODELS[opts['m']](opts['b'], opts['l'])
+
+    if opts['c']:
+        ext = '.ckp'
+        model_generator = lambda: DEFAULT_MODELS[opts['m']](opts['b'], opts['l'])
+    else:
+        ext = '.h5'
+        model_generator = None
+
     if opts['m'] == 'conv':
-        mw = ModelWrapper(h5_name=opts['i']+".h5")
+        mw = ModelWrapper(model_file=opts['i'] + ext, model_generator=model_generator)
     elif opts['m'] == 'ff':
-        mw = PixwiseModelWrapper(h5_name=opts['i']+'.h5')
+        mw = PixwiseModelWrapper(model_file=opts['i'] + ext, model_generator=model_generator)
     else:
         log("Options -m "+opts['m']+" unrecognized. Use -m ff or -m conv",
             level=ERRORS)

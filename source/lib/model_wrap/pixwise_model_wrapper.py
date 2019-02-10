@@ -10,8 +10,8 @@ def _batch_attach_histogram(batch_gray, nbins: int = 256, normalize: bool = True
 
 
 class PixwiseModelWrapper(ModelWrapper):
-    def __init__(self, h5_name: str=None, model_generator=None):
-        ModelWrapper.__init__(self, h5_name=h5_name,
+    def __init__(self, model_file: str=None, model_generator=None):
+        ModelWrapper.__init__(self, model_file=model_file,
                               model_generator=model_generator)
         self.last_input_shape = None
         self.nbins = self.model.input_shape[1]-1
@@ -27,6 +27,6 @@ class PixwiseModelWrapper(ModelWrapper):
 if __name__ == '__main__':
     from data.loading import *
 
-    mw = PixwiseModelWrapper(h5_name='ff_hist.h5')
+    mw = PixwiseModelWrapper(model_file='ff_hist.h5')
     test = load_valid(100)
     print(mw.evaluate(test, plots=4))

@@ -2,6 +2,7 @@ import keras.models as km
 from skimage import exposure
 import numpy as np
 from utils.naming import *
+import re
 import matplotlib.pyplot as plt
 
 
@@ -17,20 +18,20 @@ def make_ground_truth(imgs: np.ndarray):
 
 
 class ModelWrapper:
-    def __init__(self, h5_name: str=None, model_generator=None):
-        if h5_name is None and model_generator is None:
-            self.model = None # nothing has been passed, nothing to be wrapped
+    def __init__(self, model_file: str=None, model_generator=None):
+        if model_file is None and model_generator is None:
+            self.model = None  # nothing has been passed, nothing to be wrapped
             return
-        elif h5_name is None:
+        elif model_file is None:
             self.model = model_generator()
         elif model_generator is None:
-            self.model: km.Model = km.load_model(models_path(h5_name))
+            self.model: km.Model = km.load_model(models_path(model_file))
         else:
             self.model: km.Model = model_generator()
-            self.model.load_weights(models_path(h5_name))
+            self.model.load_weights(models_path(model_file))
 
-        if h5_name is not None:
-            self.model.name = h5_name[:-3]
+        if model_file is not None:
+            self.model.name = re.sub("\..+$", "", model_file)
         self.need_reshape_out = False
 
     def preprocess_input(self, inp):
@@ -95,7 +96,7 @@ if __name__ == '__main__':
     from lib.models import *
     from data.loading import *
 
-    mw = ModelWrapper(h5_name='plain_cnn_L5.h5',
+    mw = ModelWrapper(model_file='plain_cnn_L5.h5',
                       model_generator=lambda: plain_cnn(layers=5))
     test = load_valid(1000, gray=False)
     print(mw.evaluate(test, plots=3))
