@@ -73,7 +73,10 @@ def load(path, field_name=None, force_format=None, affine_transform=None, alpha=
     if not isinstance(path, str):
         # solve recursively for its entire depth, then return
         for p in path:
-            batch = load(p, field_name=field_name, force_format=force_format, affine_transform=affine_transform)
+            batch = load(p, field_name=field_name,
+                         force_format=force_format,
+                         affine_transform=affine_transform,
+                         force_major_side_x=force_major_side_x)
             if batch is not None:
                 out.extend(batch)
         return np.array(out)
