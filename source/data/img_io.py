@@ -52,7 +52,7 @@ def load_from_png(path):
     return 1.0 * matrix
 
 
-def load(path, field_name=None, force_format=None, affine_transform=None, alpha=False):
+def load(path, field_name=None, force_format=None, affine_transform=None, alpha=False, force_major_side_x=False):
     """
     Load images of all supported formats (currently .mat, .jpg, .png) from all paths
     specified and their subdirectories, and return them as a unique batch of normalized images.
@@ -112,6 +112,13 @@ def load(path, field_name=None, force_format=None, affine_transform=None, alpha=
 
     for img in data:
         # accept images of different sizes, standardize them
+
+        if force_major_side_x:
+            # rotate images if their major size is not the first one
+            imshape = np.shape(img)
+            if imshape[0] < imshape[1]:
+                img = np.rot90(img, k=1, axes=(0, 1))
+
         if force_format is not None:
             # if grayscale to rgb needs special manipulation:
             if np.shape(img)[-1] == 1 and np.shape(force_format)[-1] == 3:

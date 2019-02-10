@@ -113,11 +113,15 @@ def load_data_expert(opts: dict, mw: ModelWrapper):
     train_idxs = list(range(TRAIN_SAMPLES))
     valid_idxs = list(range(TRAIN_SAMPLES, TOT_SAMPLES))
 
-    train = load(path=fivek_element(idx=train_idxs))
-    train_gt = load(path=fivek_element(idx=train_idxs, expert=opts['e']))
+    train = load(path=fivek_element(idx=train_idxs),
+                 force_major_side_x=True)
+    train_gt = load(path=fivek_element(idx=train_idxs, expert=opts['e']),
+                    force_major_side_x=True)
 
-    valid = load(path=fivek_element(idx=valid_idxs))
-    valid_gt = load(path=fivek_element(idx=valid_idxs, expert=opts['e']))
+    valid = load(path=fivek_element(idx=valid_idxs),
+                 force_major_side_x=True)
+    valid_gt = load(path=fivek_element(idx=valid_idxs, expert=opts['e']),
+                    force_major_side_x=True)
 
     return (train, train_gt), (valid, valid_gt)
 
