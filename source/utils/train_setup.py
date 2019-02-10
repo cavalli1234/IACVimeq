@@ -3,9 +3,11 @@ import getopt
 from lib.model_wrap.model_wrapper import ModelWrapper
 from lib.model_wrap.pixwise_model_wrapper import PixwiseModelWrapper
 from lib.models import hist_building_cnn, ff_hist
-from utils.logging import log, ERRORS
+from utils.logging import log, ERRORS, IMPORTANT_WARNINGS
 from utils.utility import *
 from keras.losses import mean_squared_error as mse
+from utils.naming import fivek_element, fivek_dimension
+from data.img_io import load
 
 
 DEFAULT_OPTS = {
@@ -18,7 +20,8 @@ DEFAULT_OPTS = {
     'b': 64,    # number of bins to consider
     'k': 0.25,  # keep probability in ff pixel selection
     's': False,  # selective train data selection
-    'c': False  # the model is to be loaded from a ckp file
+    'c': False,  # the model is to be loaded from a ckp file
+    'e': 1      # target expert for ground truth
 }
 
 DEFAULT_MODELS = {
@@ -95,6 +98,28 @@ def load_data(opts: dict, mw: ModelWrapper):
     train, valid = conv_preprocess() if opts['m'] == 'conv' else ff_preprocess()
 
     return train, valid
+
+
+def load_data_expert(opts: dict, mw: ModelWrapper):
+    TRAIN_SAMPLES = opts['t']
+    VALID_SAMPLES = opts['v']
+
+    TOT_SAMPLES = TRAIN_SAMPLES+VALID_SAMPLES
+
+    if fivek_dimension() < TOT_SAMPLES:
+        log("Warning: required %d samples but only %d are avalable." % (TOT_SAMPLES, fivek_dimension()),
+            IMPORTANT_WARNINGS)
+
+    train_idxs = list(range(TRAIN_SAMPLES))
+    valid_idxs = list(range(TRAIN_SAMPLES, TOT_SAMPLES))
+
+    train = load(path=fivek_element(idx=train_idxs))
+    train_gt = load(path=fivek_element(idx=train_idxs, expert=opts['e']))
+
+    valid = load(path=fivek_element(idx=valid_idxs))
+    valid_gt = load(path=fivek_element(idx=valid_idxs, expert=opts['e']))
+
+    return (train, train_gt), (valid, valid_gt)
 
 
 def setup_train_configuration(opts, mw, train, valid):
