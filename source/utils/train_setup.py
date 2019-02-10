@@ -18,30 +18,34 @@ DEFAULT_OPTS = {
     'o': None,  # output model name
     'l': 5,     # number of layers for convnet
     'b': 64,    # number of bins to consider
+    'c': 1,     # number of channels of images (1 gray or 3 rgb)
     'k': 0.25,  # keep probability in ff pixel selection
     's': False,  # selective train data selection
-    'c': False,  # the model is to be loaded from a ckp file
+    'ckp': False,  # the model is to be loaded from a ckp file
     'e': 1      # target expert for ground truth
 }
 
 DEFAULT_MODELS = {
-    'conv': lambda b, l: ModelWrapper(model_generator=lambda: hist_building_cnn(layers=l, bins=b)),
-    'ff': lambda b, l: PixwiseModelWrapper(model_generator=lambda: ff_hist(n_inputs=b+1, layers=l))
+    'conv': lambda c, b, l: ModelWrapper(model_generator=lambda: hist_building_cnn(channels=c, layers=l, bins=b)),
+    'ff': lambda c, b, l: PixwiseModelWrapper(model_generator=lambda: ff_hist(n_inputs=b+1, layers=l))
 }
 
 
 def parse_opts(optlist=sys.argv[1:]):
-    in_opts, args = getopt.getopt(optlist, 't:v:m:i:o:l:k:b:sc')
+    in_opts, args = getopt.getopt(optlist, 't:v:m:i:o:l:k:b:sc:',
+                                  longopts=['ckp'])
     out_opts = DEFAULT_OPTS
     for (o, v) in in_opts:
         o = re.sub('^-*', '', o)
-        if o in 'tvlb':
+        if o == 'ckp':
+            out_opts[o] = True
+        elif o in 'tvlbc':
             out_opts[o] = int(v)
         elif o in 'mio':
             out_opts[o] = v
         elif o in 'k':
             out_opts[o] = float(v)
-        elif o in 'sc':
+        elif o in 's':
             out_opts[o] = True
 
     return out_opts
@@ -54,11 +58,11 @@ def pretrained_model(opts):
 def load_model(opts):
     if not pretrained_model(opts):
         # no old model!
-        return DEFAULT_MODELS[opts['m']](opts['b'], opts['l'])
+        return DEFAULT_MODELS[opts['m']](opts['c'], opts['b'], opts['l'])
 
-    if opts['c']:
+    if opts['ckp']:
         ext = '.ckp'
-        model_generator = lambda: DEFAULT_MODELS[opts['m']](opts['b'], opts['l']).model
+        model_generator = lambda: DEFAULT_MODELS[opts['m']](opts['c'], opts['b'], opts['l']).model
     else:
         ext = '.h5'
         model_generator = None
