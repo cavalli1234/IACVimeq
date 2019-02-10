@@ -128,7 +128,6 @@ def load(path, field_name=None, force_format=None, affine_transform=None, alpha=
 
         out.append(img)
 
-    print(path)
-    print(out)
+    print(np.shape(out))
 
     return np.array(out)
