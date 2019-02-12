@@ -102,7 +102,8 @@ def train_model(model_generator, train, valid, loss,
                         validation_data=valid,
                         verbose=1,
                         epochs=max_epochs,
-                        callbacks=callbacks)
+                        callbacks=callbacks,
+                        batch_size=4)
 
     if h5model_path is not None:
         log("Saving H5 model...", level=COMMENTARY)

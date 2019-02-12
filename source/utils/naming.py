@@ -24,7 +24,7 @@ RESPATH = __robust_respath_search()
 TBFOLDER = "tbdata"
 MODELSFOLDER = "models"
 DATASETFOLDER = "dataset"
-FIVEKFOLDR = "../../../../fivek"
+FIVEKFOLDR = DATASETFOLDER + "/fivek"
 
 def resources_path(*paths):
     """
