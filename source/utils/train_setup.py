@@ -11,8 +11,8 @@ from data.img_io import load
 
 
 DEFAULT_OPTS = {
-    't': 100,   # training samples
-    'v': 10,    # validation samples
+    't': 20,   # training samples
+    'v': 20,    # validation samples
     'm': 'hist',  # model type (convolution or pixelwise)
     'i': None,  # input model name (determines preloading of weights)
     'o': None,  # output model name

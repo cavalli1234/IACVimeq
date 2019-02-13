@@ -3,15 +3,12 @@ import sys
 
 sys.path.append(op.realpath(op.join(op.split(__file__)[0], "..")))
 
-from lib.model_wrap.model_wrapper import ModelWrapper
-from lib.model_wrap.pixwise_model_wrapper import PixwiseModelWrapper
-from lib.models import *
 from data.loading import *
-from utils.train_setup import parse_opts, load_model, load_data
+from utils.train_setup import parse_opts, load_model, load_data_expert
 
 def main():
     optlist = sys.argv[1:]
-    # optlist = '-i ff_hist -m ff'.split()
+    # optlist = '-i hist_building_cnn_L5_B64_fivek -m hist -c 3'.split()
     opts = parse_opts(optlist)
     model = load_model(opts)
     opts['s'] = False
