@@ -112,13 +112,14 @@ def load_data_expert(opts: dict, mw: ModelWrapper):
     VALID_SAMPLES = opts['v']
 
     TOT_SAMPLES = TRAIN_SAMPLES+VALID_SAMPLES
+    VALID_START = int(fivek_dimension() * 0.8)
 
     if fivek_dimension() < TOT_SAMPLES:
         log("Warning: required %d samples but only %d are avalable." % (TOT_SAMPLES, fivek_dimension()),
             IMPORTANT_WARNINGS)
 
     train_idxs = list(range(TRAIN_SAMPLES))
-    valid_idxs = list(range(TRAIN_SAMPLES, TOT_SAMPLES))
+    valid_idxs = list(range(VALID_START, VALID_SAMPLES))
 
     train = load(path=fivek_element(idx=train_idxs),
                  force_major_side_x=True,
