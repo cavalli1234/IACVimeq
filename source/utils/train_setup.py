@@ -2,7 +2,7 @@ import sys
 import getopt
 from lib.model_wrap.model_wrapper import ModelWrapper
 from lib.model_wrap.pixwise_model_wrapper import PixwiseModelWrapper
-from lib.models import hist_building_cnn, ff_hist
+from lib.models import hist_building_cnn, ff_hist, u_net
 from utils.logging import log, ERRORS, IMPORTANT_WARNINGS
 from utils.utility import *
 from keras.losses import mean_squared_error as mse
@@ -26,9 +26,12 @@ DEFAULT_OPTS = {
 }
 
 DEFAULT_MODELS = {
-    'conv': lambda c, b, l: ModelWrapper(model_generator=lambda: hist_building_cnn(channels=c, layers=l, bins=b)),
-    'ff': lambda c, b, l: PixwiseModelWrapper(model_generator=lambda: ff_hist(n_inputs=b+1, layers=l))
+    'hist': lambda c, b, l: ModelWrapper(model_generator=lambda: hist_building_cnn(channels=c, layers=l, bins=b)),
+    'ff': lambda c, b, l: PixwiseModelWrapper(model_generator=lambda: ff_hist(n_inputs=b+1, layers=l)),
+    'unet': lambda c, b, l: ModelWrapper(model_generator=lambda: u_net(channels=c))
 }
+
+CONVS = ['hist', 'unet']
 
 
 def parse_opts(optlist=sys.argv[1:]):
@@ -67,7 +70,7 @@ def load_model(opts):
         ext = '.h5'
         model_generator = None
 
-    if opts['m'] == 'conv':
+    if opts['m'] in CONVS:
         mw = ModelWrapper(model_file=opts['i'] + ext, model_generator=model_generator)
     elif opts['m'] == 'ff':
         mw = PixwiseModelWrapper(model_file=opts['i'] + ext, model_generator=model_generator)
@@ -99,7 +102,7 @@ def load_data(opts: dict, mw: ModelWrapper):
     def conv_preprocess():
         return preprocess_data_cnn(train, valid)
 
-    train, valid = conv_preprocess() if opts['m'] == 'conv' else ff_preprocess()
+    train, valid = conv_preprocess() if opts['m'] in CONVS else ff_preprocess()
 
     return train, valid
 
@@ -143,5 +146,5 @@ def setup_train_configuration(opts, mw, train, valid):
         'patience': 5,
         'learning_rate': 1e-4,
         'max_epochs': 200,
-        'log_images': opts['m'] == 'conv'
+        'log_images': opts['m'] in CONVS
     }

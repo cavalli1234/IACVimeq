@@ -99,10 +99,10 @@ def u_net(channels=1, name='u_net', activation='relu', dropout_rate=0.5):
     inputs = kl.Input(shape=(None, None, channels))
 
     # Encoding part of the network
-    conv2 = kl.Conv2D(filters=64, kernel_size=[5, 5], padding='same', kernel_initializer='glorot_normal')(inputs)
-    act2 = kl.Activation(activation)(conv2) if type(activation) is str else activation()(conv1)
+    conv1 = kl.Conv2D(filters=64, kernel_size=[5, 5], padding='same', kernel_initializer='glorot_normal')(inputs)
+    act1 = kl.Activation(activation)(conv1) if type(activation) is str else activation()(conv1)
     conv2 = kl.Conv2D(filters=64, kernel_size=[5, 5], padding='same', kernel_initializer='glorot_normal')(act1)
-    act2 = kl.Activation(activation)(conv2) if type(activation) is str else activation()(conv1)
+    act2 = kl.Activation(activation)(conv2) if type(activation) is str else activation()(conv2)
     pool2 = kl.MaxPool2D(pool_size=[2, 2])(act2)
 
     conv3 = kl.Conv2D(filters=128, kernel_size=[3, 3], padding='same', kernel_initializer='glorot_normal')(pool2)
