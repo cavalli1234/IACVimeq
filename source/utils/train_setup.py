@@ -122,17 +122,17 @@ def load_data_expert(opts: dict, mw: ModelWrapper):
 
     train = load(path=fivek_element(idx=train_idxs),
                  force_major_side_x=True,
-                 force_format=(500, 333, 3))
+                 force_format=(500, 332, 3))
     train_gt = load(path=fivek_element(idx=train_idxs, expert=opts['e']),
                     force_major_side_x=True,
-                    force_format=(500, 333, 3))
+                    force_format=(500, 332, 3))
 
     valid = load(path=fivek_element(idx=valid_idxs),
                  force_major_side_x=True,
-                 force_format=(500, 333, 3))
+                 force_format=(500, 332, 3))
     valid_gt = load(path=fivek_element(idx=valid_idxs, expert=opts['e']),
                     force_major_side_x=True,
-                    force_format=(500, 333, 3))
+                    force_format=(500, 332, 3))
 
     return (train, train_gt), (valid, valid_gt)
 
