@@ -13,7 +13,7 @@ from data.img_io import load
 DEFAULT_OPTS = {
     't': 100,   # training samples
     'v': 10,    # validation samples
-    'm': 'conv',  # model type (convolution or pixelwise)
+    'm': 'hist',  # model type (convolution or pixelwise)
     'i': None,  # input model name (determines preloading of weights)
     'o': None,  # output model name
     'l': 5,     # number of layers for convnet
