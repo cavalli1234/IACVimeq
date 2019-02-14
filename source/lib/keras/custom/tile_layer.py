@@ -11,7 +11,7 @@ class TileLayer(Layer):
         super(TileLayer, self).build(input_shape)  # Be sure to call this at the end
 
     def call(self, inputs, **kwargs):
-        return K.tile(inputs, [1, 1, 1, self.n_tiles])
+        return K.tile(K.softmax(inputs), [1, 1, 1, self.n_tiles])
 
     def compute_output_shape(self, input_shape):
         out_shape = list(input_shape)
