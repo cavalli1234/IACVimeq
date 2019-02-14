@@ -75,7 +75,7 @@ def load_model(opts):
     elif opts['m'] == 'ff':
         mw = PixwiseModelWrapper(model_file=opts['i'] + ext, model_generator=model_generator)
     else:
-        log("Options -m "+opts['m']+" unrecognized. Use -m ff or -m conv",
+        log("Options -m "+opts['m']+" unrecognized. Use -m ff or -m hist or -m unet",
             level=ERRORS)
         raise ValueError()
     if opts['o'] is not None:
@@ -119,7 +119,7 @@ def load_data_expert(opts: dict, mw: ModelWrapper):
             IMPORTANT_WARNINGS)
 
     train_idxs = list(range(TRAIN_SAMPLES))
-    valid_idxs = list(range(VALID_START, VALID_SAMPLES))
+    valid_idxs = list(range(VALID_START, VALID_START+VALID_SAMPLES))
 
     train = load(path=fivek_element(idx=train_idxs),
                  force_major_side_x=True,
