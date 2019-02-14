@@ -13,9 +13,10 @@ class ReduceLayer(Layer):
 
     def call(self, inputs, **kwargs):
         splits = tf.split(value=inputs, num_or_size_splits=self.channels, axis=-1)
-        return tf.math.add_n(splits)
+        out_splits = []
+        for split in splits:
+            out_splits.append(K.sum(split, axis=3))
+        return tf.stack(out_splits, axis=-1)
 
     def compute_output_shape(self, input_shape):
-        out_shape = list(input_shape)
-        out_shape[-1] = out_shape[-1] // self.channels
-        return tuple(out_shape)
+        return input_shape[:-1] + (self.channels,)
