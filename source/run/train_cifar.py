@@ -12,7 +12,7 @@ from utils.train_setup import parse_opts, \
 
 def main():
     optlist = sys.argv[1:]
-    optlist = '-m unet -c 1 -t 3 -v 1'.split()
+    # optlist = '-m unet -c 1 -t 3 -v 1'.split()
     opts = parse_opts(optlist)
     model = load_model(opts)
     train, valid = load_data(opts, model)
