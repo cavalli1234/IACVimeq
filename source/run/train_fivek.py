@@ -12,6 +12,7 @@ from utils.train_setup import parse_opts, \
 
 def main():
     optlist = sys.argv[1:]
+    optlist = '-t 1 -v 1 -m hybrid -c 3 -b 16 -l 3 -a 3 -w 16'.split()
     opts = parse_opts(optlist)
     model = load_model(opts)
     train, valid = load_data_expert(opts, model)

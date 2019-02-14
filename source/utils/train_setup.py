@@ -2,47 +2,55 @@ import sys
 import getopt
 from lib.model_wrap.model_wrapper import ModelWrapper
 from lib.model_wrap.pixwise_model_wrapper import PixwiseModelWrapper
-from lib.models import hist_building_cnn, ff_hist, u_net
+from lib.models import hist_building_cnn, ff_hist, u_net, plain_cnn, hybrid_net
 from utils.logging import log, ERRORS, IMPORTANT_WARNINGS
 from utils.utility import *
 from keras.losses import mean_squared_error as mse
 from utils.naming import fivek_element, fivek_dimension
 from data.img_io import load
 
-
 DEFAULT_OPTS = {
-    't': 20,   # training samples
-    'v': 20,    # validation samples
-    'm': 'hist',  # model type (convolution or pixelwise)
+    't': 20,  # training samples
+    'v': 20,  # validation samples
+    'm': 'hist',  # model type (see DEFAULT_MODELS)
     'i': None,  # input model name (determines preloading of weights)
     'o': None,  # output model name
-    'l': 5,     # number of layers for convnet
-    'b': 64,    # number of bins to consider
-    'c': 1,     # number of channels of images (1 gray or 3 rgb)
+    'l': 5,  # number of layers for convnet
+    'b': 64,  # number of bins to consider
+    'c': 1,  # number of channels of images (1 gray or 3 rgb)
     'k': 0.25,  # keep probability in ff pixel selection
     's': False,  # selective train data selection
     'ckp': False,  # the model is to be loaded from a ckp file
-    'e': 1      # target expert for ground truth
+    'e': 1,  # target expert for ground truth
+    'w': 64,  # semantic width of hybrid model
+    'a': 10,  # computed semantic masks of hybrid model
 }
 
 DEFAULT_MODELS = {
-    'hist': lambda c, b, l: ModelWrapper(model_generator=lambda: hist_building_cnn(channels=c, layers=l, bins=b)),
-    'ff': lambda c, b, l: PixwiseModelWrapper(model_generator=lambda: ff_hist(n_inputs=b+1, layers=l)),
-    'unet': lambda c, b, l: ModelWrapper(model_generator=lambda: u_net(channels=c))
+    'hist': lambda c, b, l, w, m: ModelWrapper(model_generator=lambda: hist_building_cnn(channels=c, layers=l, bins=b)),
+    'ff': lambda c, b, l, w, m: PixwiseModelWrapper(model_generator=lambda: ff_hist(n_inputs=b + 1, layers=l)),
+    'unet': lambda c, b, l, w, m: ModelWrapper(model_generator=lambda: u_net(channels=c)),
+    'hybrid': lambda c, b, l, w, m: ModelWrapper(model_generator=lambda: hybrid_net(channels=c,
+                                                                                    bins=b,
+                                                                                    layers=l,
+                                                                                    semantic_width=w,
+                                                                                    masks=m)),
+    'plain': lambda c, b, l, w, m: ModelWrapper(model_generator=lambda: plain_cnn(channels=c, layers=l, bins=b))
+
 }
 
-CONVS = ['hist', 'unet']
+CONVS = ['hist', 'unet', 'plain', 'hybrid']
 
 
 def parse_opts(optlist=sys.argv[1:]):
-    in_opts, args = getopt.getopt(optlist, 't:v:m:i:o:l:k:b:sc:',
+    in_opts, args = getopt.getopt(optlist, 't:v:m:i:o:l:k:b:sc:w:ea:',
                                   longopts=['ckp'])
     out_opts = DEFAULT_OPTS
     for (o, v) in in_opts:
         o = re.sub('^-*', '', o)
         if o == 'ckp':
             out_opts[o] = True
-        elif o in 'tvlbc':
+        elif o in 'tvlbcewa':
             out_opts[o] = int(v)
         elif o in 'mio':
             out_opts[o] = v
@@ -61,7 +69,7 @@ def pretrained_model(opts):
 def load_model(opts):
     if not pretrained_model(opts):
         # no old model!
-        return DEFAULT_MODELS[opts['m']](opts['c'], opts['b'], opts['l'])
+        return DEFAULT_MODELS[opts['m']](opts['c'], opts['b'], opts['l'], opts['w'], opts['a'])
 
     if opts['ckp']:
         ext = '.ckp'
@@ -75,7 +83,7 @@ def load_model(opts):
     elif opts['m'] == 'ff':
         mw = PixwiseModelWrapper(model_file=opts['i'] + ext, model_generator=model_generator)
     else:
-        log("Options -m "+opts['m']+" unrecognized. Use -m ff or -m hist or -m unet",
+        log("Options -m " + opts['m'] + " unrecognized. Use -m ff or -m hist or -m unet",
             level=ERRORS)
         raise ValueError()
     if opts['o'] is not None:
@@ -111,7 +119,7 @@ def load_data_expert(opts: dict, mw: ModelWrapper):
     TRAIN_SAMPLES = opts['t']
     VALID_SAMPLES = opts['v']
 
-    TOT_SAMPLES = TRAIN_SAMPLES+VALID_SAMPLES
+    TOT_SAMPLES = TRAIN_SAMPLES + VALID_SAMPLES
     VALID_START = int(fivek_dimension() * 0.8)
 
     if fivek_dimension() < TOT_SAMPLES:
@@ -119,7 +127,7 @@ def load_data_expert(opts: dict, mw: ModelWrapper):
             IMPORTANT_WARNINGS)
 
     train_idxs = list(range(TRAIN_SAMPLES))
-    valid_idxs = list(range(VALID_START, VALID_START+VALID_SAMPLES))
+    valid_idxs = list(range(VALID_START, VALID_START + VALID_SAMPLES))
 
     train = load(path=fivek_element(idx=train_idxs),
                  force_major_side_x=True,
