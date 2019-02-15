@@ -50,7 +50,7 @@ class ModelWrapper:
         return out
 
     def predict(self, in_imgs):
-        return self.postprocess_output(self.model.predict(self.preprocess_input(in_imgs)))
+        return self.postprocess_output(self.model.predict(self.preprocess_input(in_imgs), batch_size=4))
 
     def evaluate(self, in_batch, gt_batch=None, plots=0, summarize_losses=True):
         if gt_batch is None:
