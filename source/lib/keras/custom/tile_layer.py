@@ -3,7 +3,7 @@ from keras.layers import Layer
 
 
 class TileLayer(Layer):
-    def __init__(self, n_tiles, **kwargs):
+    def __init__(self, n_tiles=3, **kwargs):
         self.n_tiles = n_tiles
         super(TileLayer, self).__init__(**kwargs)
 

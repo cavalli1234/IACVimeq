@@ -4,6 +4,7 @@ import numpy as np
 from utils.naming import *
 import re
 import matplotlib.pyplot as plt
+from lib.keras.custom import CUSTOMS
 
 
 def make_ground_truth(imgs: np.ndarray):
@@ -25,7 +26,8 @@ class ModelWrapper:
         elif model_file is None:
             self.model = model_generator()
         elif model_generator is None:
-            self.model: km.Model = km.load_model(models_path(model_file))
+            self.model: km.Model = km.load_model(models_path(model_file),
+                                                 custom_objects=CUSTOMS)
         else:
             self.model: km.Model = model_generator()
             self.model.load_weights(models_path(model_file))

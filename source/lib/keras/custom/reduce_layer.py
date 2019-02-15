@@ -4,7 +4,7 @@ import tensorflow as tf
 
 
 class ReduceLayer(Layer):
-    def __init__(self, channels, **kwargs):
+    def __init__(self, channels=3, **kwargs):
         self.channels = channels
         super(ReduceLayer, self).__init__(**kwargs)
 

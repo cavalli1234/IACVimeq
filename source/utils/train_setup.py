@@ -17,7 +17,7 @@ DEFAULT_OPTS = {
     'o': None,  # output model name
     'l': 5,  # number of layers for convnet
     'b': 64,  # number of bins to consider
-    'c': 1,  # number of channels of images (1 gray or 3 rgb)
+    'c': 3,  # number of channels of images (1 gray or 3 rgb)
     'k': 0.25,  # keep probability in ff pixel selection
     's': False,  # selective train data selection
     'ckp': False,  # the model is to be loaded from a ckp file

@@ -7,7 +7,7 @@ from utils.train_setup import parse_opts, load_model, load_data_expert
 
 def main():
     optlist = sys.argv[1:]
-    # optlist = '-i u_net -m unet -c 3 -t 3 -v 3'.split()
+    # optlist = '-i hybrid_net_L10_B64_S64_M10 -m hybrid -c 3 -t 1 -v 1'.split()
     opts = parse_opts(optlist)
     model = load_model(opts)
     opts['s'] = False
