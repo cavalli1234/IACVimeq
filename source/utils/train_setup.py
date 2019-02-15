@@ -24,6 +24,7 @@ DEFAULT_OPTS = {
     'e': 1,  # target expert for ground truth
     'w': 64,  # semantic width of hybrid model
     'a': 10,  # computed semantic masks of hybrid model
+    'from-fresh': False  # force loading the model architecture
 }
 
 DEFAULT_MODELS = {
@@ -44,11 +45,11 @@ CONVS = ['hist', 'unet', 'plain', 'hybrid']
 
 def parse_opts(optlist=sys.argv[1:]):
     in_opts, args = getopt.getopt(optlist, 't:v:m:i:o:l:k:b:sc:w:ea:',
-                                  longopts=['ckp'])
+                                  longopts=['ckp', 'from-fresh'])
     out_opts = DEFAULT_OPTS
     for (o, v) in in_opts:
         o = re.sub('^-*', '', o)
-        if o == 'ckp':
+        if o in ['ckp', 'from-fresh']:
             out_opts[o] = True
         elif o in 'tvlbcewa':
             out_opts[o] = int(v)
@@ -73,10 +74,13 @@ def load_model(opts):
 
     if opts['ckp']:
         ext = '.ckp'
-        model_generator = lambda: DEFAULT_MODELS[opts['m']](opts['c'], opts['b'], opts['l']).model
+        model_generator = lambda: DEFAULT_MODELS[opts['m']](opts['c'], opts['b'], opts['l'], opts['w'], opts['a']).model
     else:
         ext = '.h5'
         model_generator = None
+
+    if opts['from-fresh'] and not opts['ckp']:
+        model_generator = lambda: DEFAULT_MODELS[opts['m']](opts['c'], opts['b'], opts['l'], opts['w'], opts['a']).model
 
     if opts['m'] in CONVS:
         mw = ModelWrapper(model_file=opts['i'] + ext, model_generator=model_generator)
