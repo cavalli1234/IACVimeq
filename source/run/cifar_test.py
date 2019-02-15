@@ -8,12 +8,12 @@ from utils.train_setup import parse_opts, load_model, load_data_expert
 
 def main():
     optlist = sys.argv[1:]
-    # optlist = '-i hist_building_cnn_L5_B64_fivek -m hist -c 3'.split()
+    # optlist = '-i plain_cnn_L10 -m plain -l 10 -b 128 -c 1 -t 1 -v 1 --from-fresh'.split()
     opts = parse_opts(optlist)
     model = load_model(opts)
     opts['s'] = False
-    train = load_train(500, shuffle=False)
-    valid = load_valid(500)
+    train = load_train(opts['t'], shuffle=False)
+    valid = load_valid(opts['v'])
     trainloss = model.evaluate(train, plots=4)
     validloss = model.evaluate(valid, plots=4)
 
