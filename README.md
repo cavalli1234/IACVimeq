@@ -54,6 +54,11 @@ $ ./fivek_downloader.sh
 
 Once the environment is set up you can test the performance of each model and have samples of their output.
 
+The first plot of the test script shows the worst validation sample, followed by three random samples.
+The shown images from left to right are: original, ground truth, network output, difference.
+
+The second plot of the test script shows an histogram of the losses for each validation image evaluated.
+
 The following commands run the tests on 20 validation images. Change the -v option to run on more or fewer samples.
 
 Before running tests, run the following command:
