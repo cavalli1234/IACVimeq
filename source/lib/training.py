@@ -15,7 +15,8 @@ def train_model(model_generator, train, valid, loss,
                 model_name=None,
                 additional_callbacks=None,
                 learning_rate=1e-3,
-                log_images=True) -> K.models.Model:
+                log_images=True,
+                batch_size=None) -> K.models.Model:
     """
     Train a model with all kinds of log services and optimizations we could come up with.
     Clears completely the session at each call to have separated training sessions of different models
@@ -103,7 +104,7 @@ def train_model(model_generator, train, valid, loss,
                         verbose=1,
                         epochs=max_epochs,
                         callbacks=callbacks,
-                        batch_size=4)
+                        batch_size=batch_size)
 
     if h5model_path is not None:
         log("Saving H5 model...", level=COMMENTARY)

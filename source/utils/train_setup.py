@@ -24,7 +24,8 @@ DEFAULT_OPTS = {
     'e': 1,  # target expert for ground truth
     'w': 64,  # semantic width of hybrid model
     'a': 10,  # computed semantic masks of hybrid model
-    'from-fresh': False  # force loading the model architecture
+    'from-fresh': False,  # force loading the model architecture
+    'batch-size': None,  # batch size
 }
 
 DEFAULT_MODELS = {
@@ -45,12 +46,14 @@ CONVS = ['hist', 'unet', 'plain', 'hybrid']
 
 def parse_opts(optlist=sys.argv[1:]):
     in_opts, args = getopt.getopt(optlist, 't:v:m:i:o:l:k:b:sc:w:ea:',
-                                  longopts=['ckp', 'from-fresh'])
+                                  longopts=['ckp', 'from-fresh', 'batch-size='])
     out_opts = DEFAULT_OPTS
     for (o, v) in in_opts:
         o = re.sub('^-*', '', o)
         if o in ['ckp', 'from-fresh']:
             out_opts[o] = True
+        elif o in ['batch-size']:
+            out_opts[o] = v
         elif o in 'tvlbcewa':
             out_opts[o] = int(v)
         elif o in 'mio':
@@ -159,5 +162,6 @@ def setup_train_configuration(opts, mw, train, valid):
         'patience': 5,
         'learning_rate': 1e-4,
         'max_epochs': 200,
-        'log_images': opts['m'] in CONVS
+        'log_images': opts['m'] in CONVS,
+        'batch_size': opts['batch-size']
     }
