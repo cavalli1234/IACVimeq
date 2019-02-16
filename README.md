@@ -59,7 +59,7 @@ The shown images from left to right are: original, ground truth, network output,
 
 The second plot of the test script shows an histogram of the losses for each validation image evaluated.
 
-The following commands run the tests on 20 validation images. Change the -v option to run on more or fewer samples.
+The following commands run the tests on 20 validation images. Change the -v option to run on more or less samples.
 
 Before running tests, run the following command:
 
