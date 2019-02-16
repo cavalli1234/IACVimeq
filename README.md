@@ -15,6 +15,13 @@ Remember to setup correctly the path, make sure to add the following line in you
 export PATH="${HOME}/anaconda3/bin:$PATH"
 ```
 
+At this point you should reset the console (close it and open again!)
+
+You should have the program unzip installed in order to extract the fivek dataset, if not install it
+```zsh
+$ sudo apt install unzip
+```
+
 ### Installing
 
 For the installations run the following commands:
@@ -49,6 +56,12 @@ Once the environment is set up you can test the performance of each model and ha
 
 The following commands run the tests on 20 validation images. Change the -v option to run on more or fewer samples.
 
+Before running tests, run the following command:
+
+```zsh
+$ source activate IACVimeq
+```
+
 Pixel-wise Fully Connected on cifar10:
 ```zsh
 $ python source/run/cifar_test.py -v 20 -m ff -i ff_L10_B64 -b 64 -c 1
@@ -82,6 +95,5 @@ $ python source/run/fivek_test.py -v 20 -m hist -i hist_building_cnn_L5_B64_five
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+* **Gianpaolo Di Pietro**
+* **Luca Cavalli**
