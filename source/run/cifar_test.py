@@ -12,12 +12,12 @@ def main():
     opts = parse_opts(optlist)
     model = load_model(opts)
     opts['s'] = False
-    train = load_train(opts['t'], shuffle=False)
+    # train = load_train(opts['t'], shuffle=False)
     valid = load_valid(opts['v'])
-    trainloss = model.evaluate(train, plots=4)
+    # trainloss = model.evaluate(train, plots=4)
     validloss = model.evaluate(valid, plots=4)
 
-    print(opts['i'], " train loss: ", trainloss)
+    # print(opts['i'], " train loss: ", trainloss)
     print(opts['i'], " valid loss: ", validloss)
 
 
