@@ -26,7 +26,7 @@ def ff_hist(n_inputs: int, layers: int = 5, name: str = None):
     for _ in range(layers - 3):
         model.add(kl.Dense(units=n_inputs // 2, activation='relu'))
     model.add(kl.Dense(units=n_inputs // 4, activation='tanh'))
-    model.add(kl.Dropout(rate=0.85))
+    # model.add(kl.Dropout(rate=0.85))
     model.add(kl.Dense(units=1, activation='sigmoid'))
     return model
 
