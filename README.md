@@ -45,7 +45,40 @@ $ ./fivek_downloader.sh
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+Once the environment is set up you can test the performance of each model and have samples of their output.
+
+The following commands run the tests on 20 validation images. Change the -v option to run on more or fewer samples.
+
+Pixel-wise Fully Connected on cifar10:
+```zsh
+$ python source/run/cifar_test.py -v 20 -m ff -i ff_L10_B64 -b 64 -c 1
+```
+
+Plain CNN on cifar10:
+```zsh
+$ python source/run/cifar_test.py -v 20 -m plain -i plain_cnn_L10_cifar -b 128 -l 10 -c 1 --from-fresh
+```
+
+Histogram CNN on cifar10:
+```zsh
+$ python source/run/cifar_test.py -v 20 -m hist -i hist_building_cnn_L10_B128_superGood -c 1
+```
+
+Plain CNN on FiveK:
+```zsh
+$ python source/run/fivek_test.py -v 20 -m plain -i plain_cnn_L10_fivek -b 128 -l 10
+```
+
+U-net on FiveK:
+```zsh
+$ python source/run/fivek_test.py -v 20 -m unet -i u_net_best
+```
+
+Histogram CNN on FiveK:
+```zsh
+$ python source/run/fivek_test.py -v 20 -m hist -i hist_building_cnn_L5_B64_fivek
+```
+
 
 ## Authors
 
