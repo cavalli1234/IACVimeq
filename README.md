@@ -1,6 +1,6 @@
 # IACVimeq
 
-One Paragraph of project description goes here
+The aim of this project is learning expert photo enhancement structurally designed specifically to learn histogram equalization. Human expert photo enhancement applies arbitrary color transformations on different semantic areas of the photo, making it an unstructured problem to be approached directly. Histogram equalization, on the other side, is a simple algorithm that can easily be analysed to suggest structural constraint on a deep architecture to improve learning of meaningful color transformations that can be useful for the expert photo enhancement problem.
 
 ## Getting Started
 
