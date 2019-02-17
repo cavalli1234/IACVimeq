@@ -84,7 +84,7 @@ $ python source/run/cifar_test.py -v 20 -m hist -i hist_building_cnn_L10_B128_su
 
 Plain CNN on FiveK:
 ```zsh
-$ python source/run/fivek_test.py -v 20 -m plain -i plain_cnn_L10_fivek -b 128 -l 10
+$ python source/run/fivek_test.py -v 20 -m plain -i plain_cnn_L10_fivek -b 128 -l 10 --from-fresh
 ```
 
 U-net on FiveK:
