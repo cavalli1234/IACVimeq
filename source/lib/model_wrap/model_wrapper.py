@@ -5,6 +5,7 @@ from utils.naming import *
 import re
 import matplotlib.pyplot as plt
 from lib.keras.custom import CUSTOMS
+from data.img_io import save_image_from_matrix
 
 
 def make_ground_truth(imgs: np.ndarray):
@@ -52,7 +53,7 @@ class ModelWrapper:
     def predict(self, in_imgs):
         return self.postprocess_output(self.model.predict(self.preprocess_input(in_imgs), batch_size=4))
 
-    def evaluate(self, in_batch, gt_batch=None, plots=0, summarize_losses=True):
+    def evaluate(self, in_batch, gt_batch=None, plots=0, summarize_losses=True, save_png=None):
         if gt_batch is None:
             gt_batch = make_ground_truth(in_batch)
         pred_batch = self.predict(in_batch)
@@ -62,6 +63,7 @@ class ModelWrapper:
             worst_sample_idx = np.argmax(losses_array)
             plots = min(plots, len(in_batch))
             vert_concat = lambda x: np.concatenate((x[worst_sample_idx],)+tuple(x[:plots-1]), axis=0)
+            # vert_concat = lambda x: np.concatenate(tuple(x[:plots]), axis=0)
 
             norm_diff_batch = [d/np.max(d) for d in diff_batch]
 
@@ -70,7 +72,11 @@ class ModelWrapper:
             pr_plots = vert_concat(pred_batch)
             df_plots = vert_concat(norm_diff_batch)
 
+            # total = np.concatenate((in_plots, gt_plots, pr_plots), axis=1)
             total = np.concatenate((in_plots, gt_plots, pr_plots, df_plots), axis=1)
+
+            if save_png is not None:
+                save_image_from_matrix(total, resources_path(save_png))
 
             cmap = None
             # handle grayscale

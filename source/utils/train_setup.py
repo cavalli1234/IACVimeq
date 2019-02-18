@@ -26,6 +26,7 @@ DEFAULT_OPTS = {
     'a': 10,  # computed semantic masks of hybrid model
     'from-fresh': False,  # force loading the model architecture
     'batch-size': None,  # batch size
+    'plot': None,  # image file where the test images are to be saved
 }
 
 DEFAULT_MODELS = {
@@ -46,13 +47,15 @@ CONVS = ['hist', 'unet', 'plain', 'hybrid']
 
 def parse_opts(optlist=sys.argv[1:]):
     in_opts, args = getopt.getopt(optlist, 't:v:m:i:o:l:k:b:sc:w:ea:',
-                                  longopts=['ckp', 'from-fresh', 'batch-size='])
+                                  longopts=['ckp', 'from-fresh', 'batch-size=', 'plot='])
     out_opts = DEFAULT_OPTS
     for (o, v) in in_opts:
         o = re.sub('^-*', '', o)
         if o in ['ckp', 'from-fresh']:
             out_opts[o] = True
         elif o in ['batch-size']:
+            out_opts[o] = int(v)
+        elif o in ['plot']:
             out_opts[o] = v
         elif o in 'tvlbcewa':
             out_opts[o] = int(v)
