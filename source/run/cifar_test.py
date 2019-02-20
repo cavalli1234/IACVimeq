@@ -8,7 +8,7 @@ from utils.train_setup import parse_opts, load_model
 
 def main():
     optlist = sys.argv[1:]
-    # optlist = '-i plain_cnn_L10 -m plain -l 10 -b 128 -c 1 -t 1 -v 1 --from-fresh'.split()
+    # optlist = '-i plain_cnn_L10_cifar -m plain -l 10 -b 128 -c 1 -t 1 -v 15 --plot cvplain.png --from-fresh'.split()
     opts = parse_opts(optlist)
     model = load_model(opts)
     opts['s'] = False

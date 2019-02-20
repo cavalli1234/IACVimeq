@@ -33,13 +33,13 @@ def save_mat(filename, **variables):
     scipy.io.savemat(filename, variables)
 
 
-def save_image_from_matrix(matrix, path):
+def save_image_from_matrix(matrix, path, **kwargs):
     """
     This method saves an image from a 3D RGB matrix
     :param matrix: the matrix representing image pixels
     :param path: path for the png image
     """
-    image.imsave(path, matrix)
+    image.imsave(path, matrix, **kwargs)
 
 
 def load_from_png(path):

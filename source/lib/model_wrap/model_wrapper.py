@@ -75,9 +75,6 @@ class ModelWrapper:
             # total = np.concatenate((in_plots, gt_plots, pr_plots), axis=1)
             total = np.concatenate((in_plots, gt_plots, pr_plots, df_plots), axis=1)
 
-            if save_png is not None:
-                save_image_from_matrix(total, resources_path(save_png))
-
             cmap = None
             # handle grayscale
             if np.shape(total)[-1] == 1:
@@ -85,6 +82,9 @@ class ModelWrapper:
                 cmap = 'gray'
             elif np.ndim(total) == 2:
                 cmap = 'gray'
+
+            if save_png is not None:
+                save_image_from_matrix(total, resources_path(save_png), cmap=cmap)
 
             plt.title("Image samples")
             plt.imshow(total, cmap=cmap, vmin=0, vmax=1)

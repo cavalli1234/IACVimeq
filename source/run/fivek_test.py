@@ -7,7 +7,7 @@ from utils.train_setup import parse_opts, load_model, load_data_expert
 
 def main():
     optlist = sys.argv[1:]
-    # optlist = '-i hist_building_cnn_L5_B64_fivek -m hist -c 3 -t 1 -v 3 --plot test.png'.split()
+    # optlist = '-i u_net_best -m unet -c 3 -t 1 -v 10 -l 10 -b 128 --plot fvunet.png --'.split()
     opts = parse_opts(optlist)
     model = load_model(opts)
     opts['s'] = False
