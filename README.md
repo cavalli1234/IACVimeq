@@ -49,6 +49,8 @@ $ chmod +x fivek_downloader.sh
 $ ./fivek_downloader.sh
 ```
 
+The models and a part of the fivek dataset are already included in the repository
+
 ## Running the tests
 
 Once the environment is set up you can test the performance of each model and have samples of their output.
